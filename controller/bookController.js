@@ -6,7 +6,7 @@ exports.addBook = asyncMiddleware(async (req, res) => {
   await Book.create({
     title: req.body.title,
     author: req.body.author,
-    page: req.body.page,
+    pages: req.body.pages,
     publisher_date: req.body.publisher_date,
     language: req.body.language,
     publisher_id: req.body.publisher_id

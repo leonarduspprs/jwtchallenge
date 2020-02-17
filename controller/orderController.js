@@ -5,11 +5,13 @@ const Book = db.book;
 const asyncMiddleware = require("express-async-handler");
 
 exports.addOrder = asyncMiddleware(async (req, res) => {
+  // Save order to Database
+  console.log("Processing func -> Ordering");
   const user = await User.findOne({
-    where: { id: req.userId }
+    where: { id: req.body.userId }
   });
   const books = await Book.findOne({
-    where: { id: req.params.id }
+    where: { id: req.body.bookId }
   });
   await user.addBooks(books);
   res.status(201).send({
@@ -30,8 +32,30 @@ exports.orders = asyncMiddleware(async (req, res) => {
       }
     ]
   });
+
   res.status(200).json({
     description: "All Order",
+    user: user
+  });
+});
+
+exports.getOrder = asyncMiddleware(async (req, res) => {
+  const user = await User.findOne({
+    where: { id: req.userId },
+    attributes: ["name", "username", "email"],
+    include: [
+      {
+        model: Book,
+        attributes: ["title", "author", "language", "publisher_id"],
+        through: {
+          attributes: ["userId", "bookId"]
+        }
+      }
+    ]
+  });
+  console.log("tes eror bisa kali");
+  res.status(200).json({
+    description: "User order page",
     user: user
   });
 });
