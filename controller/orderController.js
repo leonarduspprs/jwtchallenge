@@ -6,7 +6,6 @@ const asyncMiddleware = require("express-async-handler");
 
 exports.addOrder = asyncMiddleware(async (req, res) => {
   // Save order to Database
-  console.log("Processing func -> Ordering");
   const user = await User.findOne({
     where: { id: req.body.userId }
   });
@@ -15,7 +14,7 @@ exports.addOrder = asyncMiddleware(async (req, res) => {
   });
   await user.addBooks(books);
   res.status(201).send({
-    status: "Order registered successfully!"
+    status: "Orders successfull"
   });
 });
 
@@ -53,7 +52,7 @@ exports.getOrder = asyncMiddleware(async (req, res) => {
       }
     ]
   });
-  console.log("tes eror bisa kali");
+  console.log("error");
   res.status(200).json({
     description: "User order page",
     user: user

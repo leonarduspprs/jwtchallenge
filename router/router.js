@@ -54,6 +54,20 @@ module.exports = function(app) {
     bookController.getBookById
   );
 
+  app.put(
+    "/books/:id",
+    [authJwt.verifyToken, authJwt.isAdmin],
+    bookController.putBook
+  );
+
+  app.delete(
+    "/books/:id",
+    [authJwt.verifyToken, authJwt.isAdmin],
+    bookController.deleteBook
+  );
+
+  //orders
+
   app.post(
     "/orders",
     [authJwt.verifyToken, authJwt.isAdmin],
