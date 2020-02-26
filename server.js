@@ -1,13 +1,13 @@
-var express = require('express');
+var express = require("express");
 var app = express();
-var morgan = require('morgan');
-
+var cors = require("cors");
+var morgan = require("morgan");
 
 app.use(express.json());
-app.use(morgan('common'));
+app.use(cors());
+app.use(morgan("common"));
 
-require('./router/router.js')(app);
-
+require("./router/router.js")(app);
 
 // const db = require('./app/db.js');
 // const Role = db.role;
@@ -21,26 +21,25 @@ require('./router/router.js')(app);
 //     });
 
 var server = app.listen(8080, "127.0.0.1", function() {
-    var host = server.address().address;
-    var port = server.address().port;
-    console.log("App listening at http://%s:%s", host, port);
-    });
+  var host = server.address().address;
+  var port = server.address().port;
+  console.log("App listening at http://%s:%s", host, port);
+});
 
-    // function initial() {
+// function initial() {
 
-    //     Role.create({
-    //     id: 1,
-    //     name: "USER"
-    //     });
+//     Role.create({
+//     id: 1,
+//     name: "USER"
+//     });
 
-    // Role.create({
-    //     id: 2,
-    //     name: "ADMIN"
-    //     });
+// Role.create({
+//     id: 2,
+//     name: "ADMIN"
+//     });
 
-    // Role.create({
-    //     id: 3,
-    //     name: "PM"
-    //     });
-    // }
-    
+// Role.create({
+//     id: 3,
+//     name: "PM"
+//     });
+// }

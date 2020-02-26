@@ -6,7 +6,7 @@ exports.addBook = asyncMiddleware(async (req, res) => {
   await Book.create({
     title: req.body.title,
     author: req.body.author,
-    pages: req.body.pages,
+    page: req.body.page,
     publisher_date: req.body.publisher_date,
     language: req.body.language,
     publisher_id: req.body.publisher_id
@@ -50,28 +50,5 @@ exports.getBookById = asyncMiddleware(async (req, res) => {
   res.status(200).json({
     description: "Showing all book",
     book: books
-  });
-});
-
-exports.putBook = asyncMiddleware(async (req, res) => {
-  await Book.update(
-    {
-      title: req.body.title,
-      author: req.body.author,
-      page: req.body.page,
-      language: req.body.language,
-      publisher_id: req.body.publisher_id
-    },
-    { where: { id: req.params.id } }
-  );
-  res.status(201).send({
-    status: "Book updated"
-  });
-});
-
-exports.deleteBook = asyncMiddleware(async (req, res) => {
-  await Book.destroy({ where: { id: req.params.id } });
-  res.status(201).send({
-    status: "Book deleted"
   });
 });

@@ -3,8 +3,8 @@ const config = require("../app/config.js");
 const User = db.user;
 const Role = db.role;
 const asyncMiddleware = require("express-async-handler");
-const Op = db.Sequelize.Op;
 
+const Op = db.Sequelize.Op;
 var jwt = require("jsonwebtoken");
 var bcrypt = require("bcryptjs");
 exports.signup = asyncMiddleware(async (req, res) => {
@@ -33,6 +33,10 @@ exports.signin = asyncMiddleware(async (req, res) => {
   const user = await User.findOne({
     where: {
       username: req.body.username
+    },
+    include: {
+      model: Role,
+      through: ["roleId", "userId"]
     }
   });
   if (!user) {
@@ -42,7 +46,6 @@ exports.signin = asyncMiddleware(async (req, res) => {
       reason: "User Not Found!"
     });
   }
-
   const passwordIsValid = bcrypt.compareSync(req.body.password, user.password);
   if (!passwordIsValid) {
     return res.status(401).send({
@@ -57,6 +60,7 @@ exports.signin = asyncMiddleware(async (req, res) => {
   res.status(200).send({
     auth: true,
     type: "Bearer",
-    accessToken: token
+    accessToken: token,
+    roles: user
   });
 });

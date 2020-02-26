@@ -5,16 +5,15 @@ const Book = db.book;
 const asyncMiddleware = require("express-async-handler");
 
 exports.addOrder = asyncMiddleware(async (req, res) => {
-  // Save order to Database
   const user = await User.findOne({
-    where: { id: req.body.userId }
+    where: { id: req.userId }
   });
   const books = await Book.findOne({
-    where: { id: req.body.bookId }
+    where: { id: req.params.id }
   });
   await user.addBooks(books);
   res.status(201).send({
-    status: "Orders successfull"
+    status: "Order registered successfully!"
   });
 });
 
@@ -31,30 +30,8 @@ exports.orders = asyncMiddleware(async (req, res) => {
       }
     ]
   });
-
   res.status(200).json({
     description: "All Order",
-    user: user
-  });
-});
-
-exports.getOrder = asyncMiddleware(async (req, res) => {
-  const user = await User.findOne({
-    where: { id: req.userId },
-    attributes: ["name", "username", "email"],
-    include: [
-      {
-        model: Book,
-        attributes: ["title", "author", "language", "publisher_id"],
-        through: {
-          attributes: ["userId", "bookId"]
-        }
-      }
-    ]
-  });
-  console.log("error");
-  res.status(200).json({
-    description: "User order page",
     user: user
   });
 });
