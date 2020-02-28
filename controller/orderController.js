@@ -9,7 +9,7 @@ exports.addOrder = asyncMiddleware(async (req, res) => {
     where: { id: req.userId }
   });
   const books = await Book.findOne({
-    where: { id: req.params.id }
+    where: { id: req.body.bookId }
   });
   await user.addBooks(books);
   res.status(201).send({
@@ -19,7 +19,7 @@ exports.addOrder = asyncMiddleware(async (req, res) => {
 
 exports.orders = asyncMiddleware(async (req, res) => {
   const user = await User.findAll({
-    attributes: ["name", "username", "email"],
+    attributes: ["id", "name", "username", "email"],
     include: [
       {
         model: Book,
@@ -30,6 +30,30 @@ exports.orders = asyncMiddleware(async (req, res) => {
       }
     ]
   });
+  res.status(200).json({
+    description: "All Order",
+    user: user
+  });
+});
+
+exports.orderById = asyncMiddleware(async (req, res) => {
+  const user = await User.findAll(
+    {
+      where: { id: req.params.id }
+    },
+    {
+      attributes: ["id", "name", "username", "email"],
+      include: [
+        {
+          model: Book,
+          attributes: ["title", "author", "pages", "language", "publisher_id"],
+          through: {
+            attributes: ["userId", "bookId"]
+          }
+        }
+      ]
+    }
+  );
   res.status(200).json({
     description: "All Order",
     user: user

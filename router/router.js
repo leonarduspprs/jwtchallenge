@@ -43,10 +43,17 @@ module.exports = function(app) {
 
   app.get("/books", [authJwt.verifyToken], bookController.getBook);
 
+  app.delete("/books/:id", [authJwt.verifyToken], bookController.deleteBook);
+  app.put("/books/:id", [authJwt.verifyToken], bookController.updateBuku);
+
   app.get("/books/:id", [authJwt.verifyToken], bookController.getBookById);
 
-  app.get("/orders", [authJwt.verifyToken], orderController.addOrder);
+  app.post("/orders", [authJwt.verifyToken], orderController.addOrder);
 
+  app.get("/orders", [authJwt.verifyToken], orderController.orders);
+  
+
+  app.get("/orderss/:id", [authJwt.verifyToken], orderController.orderById);
   // error handler 404
 
   app.use(function(req, res, next) {
