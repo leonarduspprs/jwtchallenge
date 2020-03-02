@@ -14,28 +14,25 @@ const sequelize = new Sequelize(env.database, env.username, env.password, {
 const db = {};
 db.Sequelize = Sequelize;
 db.sequelize = sequelize;
+db.artikel = require("../model/artikel.js")(sequelize, Sequelize);
 db.user = require("../model/user.js")(sequelize, Sequelize);
-db.role = require("../model/role.js")(sequelize, Sequelize);
-db.book = require("../model/book.js")(sequelize, Sequelize);
-db.role.belongsToMany(db.user, {
-  through: "user_roles",
-  foreignKey: "roleId",
-  otherKey: "userId"
-});
-db.user.belongsToMany(db.role, {
-  through: "user_roles",
-  foreignKey: "userId",
-  otherKey: "roleId"
+db.komentar = require("../model/komentar.js")(sequelize, Sequelize);
+
+
+
+db.user.hasMany(db.artikel, {
+  foreignKey: "userId"
 });
 
-db.book.belongsToMany(db.user, {
-  through: "user_books",
-  foreignKey: "bookId",
-  otherKey: "userId"
+db.artikel.hasMany(db.komentar, {
+  foreignKey: "artikelId"
 });
-db.user.belongsToMany(db.book, {
-  through: "user_books",
-  foreignKey: "userId",
-  otherKey: "bookId"
+
+db.user.hasMany(db.komentar, {
+  foreignKey: "userId"
 });
+
+
+
+
 module.exports = db;

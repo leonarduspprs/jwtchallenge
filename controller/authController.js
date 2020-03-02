@@ -7,23 +7,19 @@ const asyncMiddleware = require("express-async-handler");
 const Op = db.Sequelize.Op;
 var jwt = require("jsonwebtoken");
 var bcrypt = require("bcryptjs");
+
 exports.signup = asyncMiddleware(async (req, res) => {
   // Save User to Database
   console.log("Processing func -> SignUp");
-  const user = await User.create({
-    name: req.body.name,
+  await User.create({
+    nama: req.body.nama,
     username: req.body.username,
     email: req.body.email,
-    password: bcrypt.hashSync(req.body.password, 8)
+    password: bcrypt.hashSync(req.body.password, 8),
+    admin: req.body.admin,
+    status: req.body.status
   });
-  const roles = await Role.findAll({
-    where: {
-      name: {
-        [Op.or]: req.body.roles
-      }
-    }
-  });
-  await user.setRoles(roles);
+
   res.status(201).send({
     status: "User registered successfully!"
   });
@@ -33,10 +29,6 @@ exports.signin = asyncMiddleware(async (req, res) => {
   const user = await User.findOne({
     where: {
       username: req.body.username
-    },
-    include: {
-      model: Role,
-      through: ["roleId", "userId"]
     }
   });
   if (!user) {
@@ -61,6 +53,6 @@ exports.signin = asyncMiddleware(async (req, res) => {
     auth: true,
     type: "Bearer",
     accessToken: token,
-    roles: user
+    roles: user.admin
   });
 });

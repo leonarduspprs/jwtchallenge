@@ -2,59 +2,105 @@ const verifySignUp = require("./verifySignUp");
 const authJwt = require("./verifyJwtToken");
 const authController = require("../controller/authController.js");
 const userController = require("../controller/userController.js");
+const artikelController = require("../controller/artikelController.js");
 const bookController = require("../controller/bookController.js");
 const orderController = require("../controller/orderController.js");
 
 module.exports = function(app) {
-  // Auth
+  // // Auth
+  // app.post(
+  //   "/api/auth/signup",
+  //   [
+  //     verifySignUp.checkDuplicateUserNameOrEmail,
+  //     verifySignUp.checkRolesExisted
+  //   ],
+  //   authController.signup
+  // );
+
+  // app.post("/api/auth/signin", authController.signin);
+  // // get all user
+  // app.get("/api/users", [authJwt.verifyToken], userController.users);
+
+  // // get 1 user according to roles
+  // app.get("/api/test/user", [authJwt.verifyToken], userController.userContent);
+  // app.get(
+  //   "/api/test/pm",
+  //   [authJwt.verifyToken, authJwt.isPmOrAdmin],
+  //   userController.managementBoard
+  // );
+  // app.get(
+  //   "/api/test/admin",
+  //   [authJwt.verifyToken, authJwt.isAdmin],
+  //   userController.adminBoard
+  // );
+
+  // //controller buku
+
+  // app.post(
+  //   "/books",
+  //   [authJwt.verifyToken, authJwt.isAdmin],
+  //   bookController.addBook
+  // );
+
+  // app.get("/books", [authJwt.verifyToken], bookController.getBook);
+
+  // app.delete("/books/:id", [authJwt.verifyToken], bookController.deleteBook);
+  // app.put("/books/:id", [authJwt.verifyToken], bookController.updateBuku);
+
+  // app.get("/books/:id", [authJwt.verifyToken], bookController.getBookById);
+
+  // app.post("/orders", [authJwt.verifyToken], orderController.addOrder);
+
+  // app.get("/orders", [authJwt.verifyToken], orderController.orders);
+
+  // app.get("/orderss/:id", [authJwt.verifyToken], orderController.orderById);
+  // // error handler 404
+
+  //startedover
+  //EndPoints Masuk
   app.post(
     "/api/auth/signup",
-    [
-      verifySignUp.checkDuplicateUserNameOrEmail,
-      verifySignUp.checkRolesExisted
-    ],
+    [verifySignUp.checkDuplicateUserNameOrEmail],
     authController.signup
   );
 
   app.post("/api/auth/signin", authController.signin);
-  // get all user
-  app.get("/api/users", [authJwt.verifyToken], userController.users);
+  //
 
-  // get 1 user according to roles
-  app.get("/api/test/user", [authJwt.verifyToken], userController.userContent);
+  //Endpoints Admin
+  //Manage User
   app.get(
-    "/api/test/pm",
-    [authJwt.verifyToken, authJwt.isPmOrAdmin],
-    userController.managementBoard
-  );
-  app.get(
-    "/api/test/admin",
+    "/user",
     [authJwt.verifyToken, authJwt.isAdmin],
-    userController.adminBoard
+    userController.getUser
   );
 
-  //controller buku
+  app.put(
+    "/user/:id",
+    [authJwt.verifyToken, authJwt.isAdmin],
+    userController.blockUser
+  );
 
+  //Manage Article
   app.post(
-    "/books",
+    "/artikel",
     [authJwt.verifyToken, authJwt.isAdmin],
-    bookController.addBook
+    artikelController.artikel
   );
 
-  app.get("/books", [authJwt.verifyToken], bookController.getBook);
+  app.get(
+    "/artikel",
+    [authJwt.verifyToken, authJwt.isAdmin],
+    artikelController.getArtikel
+  );
 
-  app.delete("/books/:id", [authJwt.verifyToken], bookController.deleteBook);
-  app.put("/books/:id", [authJwt.verifyToken], bookController.updateBuku);
 
-  app.get("/books/:id", [authJwt.verifyToken], bookController.getBookById);
-
-  app.post("/orders", [authJwt.verifyToken], orderController.addOrder);
-
-  app.get("/orders", [authJwt.verifyToken], orderController.orders);
-  
-
-  app.get("/orderss/:id", [authJwt.verifyToken], orderController.orderById);
-  // error handler 404
+  app.put(
+    "/artikel/:id",
+    [authJwt.verifyToken, authJwt.isAdmin],
+    userController.blockUser
+  );
+  //
 
   app.use(function(req, res, next) {
     return res.status(404).send({

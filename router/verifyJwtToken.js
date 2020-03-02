@@ -33,41 +33,15 @@ verifyToken = (req, res, next) => {
 
 isAdmin = (req, res, next) => {
   User.findByPk(req.userId).then(user => {
-    user.getRoles().then(roles => {
-      for (let i = 0; i < roles.length; i++) {
-        console.log(roles[i].name);
-        if (roles !== null && roles[i].name.toUpperCase() === "ADMIN") {
-          next();
-          return;
-        }
-      }
-      res.status(403).send("Require Admin Role!");
+    if (user.admin === "ADMIN") {
+      next();
       return;
-    });
-  });
-};
-
-isPmOrAdmin = (req, res, next) => {
-  User.findByPk(req.userId).then(user => {
-    user.getRoles().then(roles => {
-      for (let i = 0; i < roles.length; i++) {
-        if (roles[i].name.toUpperCase() === "PM") {
-          next();
-          return;
-        }
-
-        if (roles[i].name.toUpperCase() === "ADMIN") {
-          next();
-          return;
-        }
-      }
-      res.status(403).send("Require PM or Admin Roles!");
-    });
+    }
+    res.status(403).send("Require Admin Roles!");
   });
 };
 
 const authJwt = {};
 authJwt.verifyToken = verifyToken;
 authJwt.isAdmin = isAdmin;
-authJwt.isPmOrAdmin = isPmOrAdmin;
 module.exports = authJwt;

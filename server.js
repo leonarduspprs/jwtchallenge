@@ -9,7 +9,7 @@ app.use(morgan("common"));
 
 require("./router/router.js")(app);
 
-// const db = require('./app/db.js');
+const db = require('./app/db.js');
 // const Role = db.role;
 
 // // force: true will drop the table if it already exists (comment this part aft
@@ -17,7 +17,7 @@ require("./router/router.js")(app);
 
 // db.sequelize.sync({ force: true }).then(() => {
 //     console.log('Drop and Resync with { force: true }');
-//     initial();
+    
 //     });
 
 var server = app.listen(8080, "127.0.0.1", function() {
