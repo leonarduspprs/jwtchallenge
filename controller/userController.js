@@ -11,12 +11,23 @@ exports.getUser = asyncMiddleware(async (req, res) => {
   });
 });
 
+exports.getUserById = asyncMiddleware(async (req, res) => {
+  const user = await User.findOne({ where: { id : req.params.id}},{
+    attributes: ["id", "nama", "username", "email","admin","status"]
+  });
+
+  res.status(200).json({
+    description: "All User",
+    user: user
+  });
+});
+
+
 exports.blockUser = asyncMiddleware(async (req, res) => {
   const iduser = req.params.id;
-  const statusblocked = "Blocked"
   const user = await User.update(
     {
-      status : statusblocked
+      status : req.body.status
     },  
     {
       where: {
@@ -37,43 +48,3 @@ exports.blockUser = asyncMiddleware(async (req, res) => {
   );
 });
 
-
-// exports.adminBoard = asyncMiddleware(async (req, res) => {
-//   const user = await User.findOne({
-//     where: { id: req.userId },
-
-//     attributes: ["name", "username", "email"],
-//     include: [
-//       {
-//         model: Role,
-//         attributes: ["id", "name"],
-//         through: {
-//           attributes: ["userId", "roleId"]
-//         }
-//       }
-//     ]
-//   });
-//   res.status(200).json({
-//     description: "Admin Board",
-//     user: user
-//   });
-// });
-// exports.managementBoard = asyncMiddleware(async (req, res) => {
-//   const user = await User.findOne({
-//     where: { id: req.userId },
-//     attributes: ["name", "username", "email"],
-//     include: [
-//       {
-//         model: Role,
-//         attributes: ["id", "name"],
-//         through: {
-//           attributes: ["userId", "roleId"]
-//         }
-//       }
-//     ]
-//   });
-//   res.status(200).json({
-//     description: "Management Board",
-//     user: user
-//   });
-// });

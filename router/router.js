@@ -3,61 +3,9 @@ const authJwt = require("./verifyJwtToken");
 const authController = require("../controller/authController.js");
 const userController = require("../controller/userController.js");
 const artikelController = require("../controller/artikelController.js");
-const bookController = require("../controller/bookController.js");
-const orderController = require("../controller/orderController.js");
+const komentarController = require("../controller/komentarController.js");
 
 module.exports = function(app) {
-  // // Auth
-  // app.post(
-  //   "/api/auth/signup",
-  //   [
-  //     verifySignUp.checkDuplicateUserNameOrEmail,
-  //     verifySignUp.checkRolesExisted
-  //   ],
-  //   authController.signup
-  // );
-
-  // app.post("/api/auth/signin", authController.signin);
-  // // get all user
-  // app.get("/api/users", [authJwt.verifyToken], userController.users);
-
-  // // get 1 user according to roles
-  // app.get("/api/test/user", [authJwt.verifyToken], userController.userContent);
-  // app.get(
-  //   "/api/test/pm",
-  //   [authJwt.verifyToken, authJwt.isPmOrAdmin],
-  //   userController.managementBoard
-  // );
-  // app.get(
-  //   "/api/test/admin",
-  //   [authJwt.verifyToken, authJwt.isAdmin],
-  //   userController.adminBoard
-  // );
-
-  // //controller buku
-
-  // app.post(
-  //   "/books",
-  //   [authJwt.verifyToken, authJwt.isAdmin],
-  //   bookController.addBook
-  // );
-
-  // app.get("/books", [authJwt.verifyToken], bookController.getBook);
-
-  // app.delete("/books/:id", [authJwt.verifyToken], bookController.deleteBook);
-  // app.put("/books/:id", [authJwt.verifyToken], bookController.updateBuku);
-
-  // app.get("/books/:id", [authJwt.verifyToken], bookController.getBookById);
-
-  // app.post("/orders", [authJwt.verifyToken], orderController.addOrder);
-
-  // app.get("/orders", [authJwt.verifyToken], orderController.orders);
-
-  // app.get("/orderss/:id", [authJwt.verifyToken], orderController.orderById);
-  // // error handler 404
-
-  //startedover
-  //EndPoints Masuk
   app.post(
     "/api/auth/signup",
     [verifySignUp.checkDuplicateUserNameOrEmail],
@@ -65,14 +13,13 @@ module.exports = function(app) {
   );
 
   app.post("/api/auth/signin", authController.signin);
-  //
 
-  //Endpoints Admin
-  //Manage User
+  app.get("/user", [authJwt.verifyToken], userController.getUser);
+
   app.get(
-    "/user",
+    "/user/:id",
     [authJwt.verifyToken, authJwt.isAdmin],
-    userController.getUser
+    userController.getUserById
   );
 
   app.put(
@@ -82,25 +29,51 @@ module.exports = function(app) {
   );
 
   //Manage Article
-  app.post(
-    "/artikel",
-    [authJwt.verifyToken, authJwt.isAdmin],
-    artikelController.artikel
-  );
+  app.post("/artikel", [authJwt.verifyToken], artikelController.artikel);
+
+  app.get("/artikel", artikelController.getArtikel);
 
   app.get(
-    "/artikel",
-    [authJwt.verifyToken, authJwt.isAdmin],
-    artikelController.getArtikel
+    "/artikelonadmin",
+    [authJwt.verifyToken],
+    artikelController.getArtikelAdmin
   );
-
 
   app.put(
     "/artikel/:id",
     [authJwt.verifyToken, authJwt.isAdmin],
-    userController.blockUser
+    artikelController.blockArtikel
   );
-  //
+
+  app.get(
+    "/artikell/",
+    [authJwt.verifyToken],
+    artikelController.getArtikelByLogin
+  );
+
+  app.get("/artikelbyid/:id", artikelController.getArtikelById);
+
+  //endpoint komentar
+
+  app.post(
+    "/komentar/:id",
+    [authJwt.verifyToken],
+    komentarController.tambahKomentar
+  );
+
+  app.get("/komentar/:id", komentarController.getKomentarByArtikel);
+
+  app.put(
+    "/komentar/:id",
+    [authJwt.verifyToken],
+    komentarController.blockKomentar
+  );
+
+  app.delete(
+    "/komentar/:id",
+    [authJwt.verifyToken],
+    komentarController.deleteKomentar
+  );
 
   app.use(function(req, res, next) {
     return res.status(404).send({

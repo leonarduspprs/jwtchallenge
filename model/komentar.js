@@ -3,9 +3,6 @@ module.exports = (sequelize, Sequelize) => {
     isikomentar: {
       type: Sequelize.STRING
     },
-    isiartikel: {
-      type: Sequelize.STRING
-    },
     status: {
       type: Sequelize.STRING
     }

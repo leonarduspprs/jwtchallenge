@@ -31,13 +31,14 @@ exports.signin = asyncMiddleware(async (req, res) => {
       username: req.body.username
     }
   });
-  if (!user) {
+  if (!user || user.status === "Nonaktif") {
     return res.status(404).send({
       auth: false,
       accessToken: null,
       reason: "User Not Found!"
     });
   }
+
   const passwordIsValid = bcrypt.compareSync(req.body.password, user.password);
   if (!passwordIsValid) {
     return res.status(401).send({
@@ -53,6 +54,7 @@ exports.signin = asyncMiddleware(async (req, res) => {
     auth: true,
     type: "Bearer",
     accessToken: token,
-    roles: user.admin
+    roles: user.admin,
+    id: user.id
   });
 });
